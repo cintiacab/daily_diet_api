@@ -18,13 +18,29 @@ def create_meal():
         meal = Meal(name=name, description=description, diet=True)
         db.session.add(meal)
         db.session.commit()
-        return jsonify({"message":"Meal succesfully updated"})
+        return jsonify({"message":"Meal succesfully created"})
 
     return jsonify({"message":"Invalid data"}), 401
 
 @app.route('/list', methods=['GET'])
 def list_meals():
     pass
+
+@app.route('/meal/<int:id_meal>', methods=['PUT'])
+def update_meal(id_meal):
+    data = request.json
+    meal = Meal.query.get(id_meal)
+
+    if meal:
+        meal.name = data.get("name")
+        meal.description = data.get("description")
+        meal.created_in = data.get("created in (YYYY-MM-DD HH:MM)")
+        meal.diet = data.get("diet")
+        db.session.commit()
+        return jsonify({"message":f"Meal {id_meal} succesfully updated"})
+
+    return jsonify({"message":"Meal not found"}), 404
+
 
 
 if __name__ == "__main__":
