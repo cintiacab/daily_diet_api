@@ -24,7 +24,15 @@ def create_meal():
 
 @app.route('/list', methods=['GET'])
 def list_meals():
-    pass
+    meals = Meal.query.all()
+    if meals:
+        meals_list = [{"id":m.id, "name":m.name, "description": m.description, "created_in": m.created_in, "diet": m.diet} for m in meals]
+        output = {
+           "meals" : meals_list
+            }
+        return jsonify(output)
+
+    return jsonify({"message":"No meals registered"}), 404
 
 @app.route('/meal/<int:id_meal>', methods=['GET'])
 def read_meal(id_meal):
@@ -59,6 +67,7 @@ def delete_meal(id_meal):
         return jsonify({"message":"Meal succesfully deleted"})
    
    return jsonify({"message":"Meal not found"}), 404
+
 
 
 if __name__ == "__main__":
