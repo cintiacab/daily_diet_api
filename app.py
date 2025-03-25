@@ -26,6 +26,15 @@ def create_meal():
 def list_meals():
     pass
 
+@app.route('/meal/<int:id_meal>', methods=['GET'])
+def read_meal(id_meal):
+    meal = Meal.query.get(id_meal)
+    if meal:
+        status = "✓" if meal.diet == "1" else " "
+        return jsonify({"message": f"({id_meal}). {meal.name}: {meal.description} / In diet [{status}] / created in: {meal.created_in}"})
+    
+    return jsonify({"message":"Meal not found"}), 404
+
 @app.route('/meal/<int:id_meal>', methods=['PUT'])
 def update_meal(id_meal):
     data = request.json
